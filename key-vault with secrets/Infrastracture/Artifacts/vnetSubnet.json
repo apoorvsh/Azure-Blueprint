@@ -1,0 +1,124 @@
+{
+  "kind": "template",
+  "properties": {
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "vnetAddressPrefix": {
+          "type": "string",
+          "defaultValue": "10.0.0.0/16"
+        },
+        "resourceTags": {
+          "type": "object"
+        },
+        "location": {
+          "type": "string",
+          "defaultValue": "eastus"
+        },
+        "computeAddressPrefix": {
+          "type": "string",
+          "defaultValue": "10.0.1.0/24"
+        },
+        "dataAddressPrefix": {
+          "type": "string",
+          "defaultValue": "10.0.2.0/24"
+        },
+        "webAddressPrefix": {
+          "type": "string",
+          "defaultValue": "10.0.3.0/24"
+        },
+        "windowNsgName": {
+          "type": "string"
+        },
+        "windowNsgRules": {
+          "type": "object"
+        }
+      },
+      "variables": {
+        "vnetName": "vnet",
+        "computeSubnetName": "compute",
+        "dataSubnetName": "data",
+        "webSubnetName": "web"
+      },
+      "resources": [
+        {
+          "name": "[variables('vnetName')]",
+          "type": "Microsoft.Network/virtualNetworks",
+          "apiVersion": "2018-08-01",
+          "location": "[parameters('location')]",
+          "tags": "[parameters('resourceTags')]",
+          "properties": {
+            "addressSpace": {
+              "addressPrefixes": ["[parameters('vnetAddressPrefix')]"]
+            },
+            "subnets": [
+              {
+                "name": "[variables('computeSubnetName')]",
+                "properties": {
+                  "addressPrefix": "[parameters('computeAddressPrefix')]",
+                  "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('windowNsgName'))]"
+                  }
+                }
+              },
+              {
+                "name": "[variables('dataSubnetName')]",
+                "properties": {
+                  "addressPrefix": "[parameters('dataAddressPrefix')]"
+                }
+              },
+              {
+                "name": "[variables('webSubnetName')]",
+                "properties": {
+                  "addressPrefix": "[parameters('webAddressPrefix')]"
+                }
+              }
+            ]
+          }
+        },
+
+        {
+          "name": "[parameters('windowNsgName')]",
+          "type": "Microsoft.Network/networkSecurityGroups",
+          "apiVersion": "2018-08-01",
+          "location": "[parameters('location')]",
+          "tags": "[parameters('resourceTags')]",
+          "properties": {
+            "securityRules": [
+              {
+                "name": "[parameters('windowNsgRules').Nsg.name]",
+                "properties": {
+                  "description": "description",
+                  "protocol": "[parameters('windowNsgRules').Nsg.protocol]",
+                  "sourcePortRange": "[parameters('windowNsgRules').Nsg.sourcePortRange]",
+                  "destinationPortRange": "[parameters('windowNsgRules').Nsg.destinationPortRange]",
+                  "sourceAddressPrefix": "[parameters('windowNsgRules').Nsg.sourceAddressPrefix]",
+                  "destinationAddressPrefix": "[parameters('windowNsgRules').Nsg.destinationAddressPrefix]",
+                  "access": "[parameters('windowNsgRules').Nsg.access]",
+                  "priority": "[parameters('windowNsgRules').Nsg.priority]",
+                  "direction": "[parameters('windowNsgRules').Nsg.direction]"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "resourceGroup": "Network_Rg",
+    "displayName": "vnet Subnet ARM Template",
+    "parameters": {
+      "resourceTags": {
+        "value": "[parameters('resourceTags')]"
+      },
+      "windowNsgName": {
+        "value": "compute_Nsg"
+      },
+      "windowNsgRules": {
+        "value": "[parameters('vnetSubnet_windowNsgRules')]"
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints/artifacts",
+  "name": "defaultName"
+}

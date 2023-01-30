@@ -1,0 +1,46 @@
+{
+  "properties": {
+    "description": "core Bluprint",
+    "targetScope": "subscription",
+    "parameters": {
+      "resourceTags": {
+        "type": "object"
+      },
+      "vnetSubnet_windowNsgRules": {
+        "type": "object"
+      },
+      "keyVault_Name": {
+        "type": "string"
+      },
+      "keyVault_sku": {
+        "type": "string"
+      },
+      "keyVault_SkuFamily": {
+        "type": "string"
+      },
+      "keyvault_userName": {
+        "type": "string"
+      },
+      "keyVault_windowPassword": {
+        "type": "string"
+      },
+      "keyVault_sqlAdministratorLogin": {
+        "type": "string"
+      },
+      "keyVault_sqlAdministratorLoginPassword": {
+        "type": "string"
+      }
+    },
+    "resourceGroups": {
+      "Network_Rg": {
+        "name": "Network_Rg",
+        "location": "eastus"
+      },
+      "identity_Rg": {
+        "name": "identity_Rg",
+        "location": "eastus"
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints"
+}

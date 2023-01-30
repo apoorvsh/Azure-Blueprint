@@ -1,0 +1,112 @@
+{
+  "properties": {
+    "description": "This is a default template, please modify it.",
+    "targetScope": "subscription",
+    "parameters": {
+      "resourceTags": {
+        "type": "object"
+      },
+      "adf_groupIds": {
+        "type": "string"
+      },
+      "ADLS_storageSkuTier": {
+        "type": "string"
+      },
+      "ADLS_storageAccountSkuName": {
+        "type": "string"
+      },
+      "ADLS_storageKind": {
+        "type": "string"
+      },
+      "ADLS_accessTier": {
+        "type": "string"
+      },
+      "ADLS_blob_groupIds": {
+        "type": "string"
+      },
+      "ADLS_dfs_groupIds": {
+        "type": "string"
+      },
+      "keyVaultSku_assign": {
+        "type": "string"
+      },
+      "keyVaultSkuFamily_assign": {
+        "type": "string"
+      },
+      "keyVaultSecretsValue_assign": {
+        "type": "string"
+      },
+      "keyVault_groupIds": {
+        "type": "string"
+      },
+      "synapse_dedicatedSkuCapacity": {
+        "type": "int"
+      },
+      "synapse_dedicatedSkuName": {
+        "type": "string"
+      },
+      "synapse_dedicatedSkuTier": {
+        "type": "string"
+      },
+      "synapse_dev_groupIds": {
+        "type": "string"
+      },
+      "synapse_privateLinkHUb_groupIds": {
+        "type": "string"
+      },
+      "vm_windowVmSize": {
+        "type": "string"
+      },
+      "vm_windowPublisher": {
+        "type": "string"
+      },
+      "vm_windowOffer": {
+        "type": "string"
+      },
+      "vm_windowSku": {
+        "type": "string"
+      },
+      "vm_windowVersion": {
+        "type": "string"
+      },
+      "vm_windowOsDisk": {
+        "type": "string"
+      },
+      "vm_windowCaching": {
+        "type": "string"
+      },
+      "vm_windowCreateOption": {
+        "type": "string"
+      },
+      "vm_windowUserName": {
+        "type": "securestring"
+      },
+      "vm_windowPassword": {
+        "type": "securestring"
+      },
+      "synapse_sqlAdministratorLogin": {
+        "type": "securestring"
+      },
+      "synapse_sqlAdministratorLoginPassword": {
+        "type": "securestring"
+      }
+    },
+    "resourceGroups": {
+      "data_platform_Rg": {
+        "name": "data_platform_Rg",
+        "location": "eastus",
+        "metadata": {
+          "displayName": "This is data_platform resourceGroup"
+        }
+      },
+      "compute_Rg": {
+        "name": "compute_Rg",
+        "location": "eastus",
+        "metadata": {
+          "displayName": "This is compute resourceGroup"
+        }
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints"
+}

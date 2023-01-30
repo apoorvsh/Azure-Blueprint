@@ -1,0 +1,169 @@
+{
+  "kind": "template",
+  "properties": {
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "keyVaultName": {
+          "type": "string"
+        },
+        "resourceTags": {
+          "type": "object"
+        },
+        "enabledForDeployment": {
+          "type": "bool",
+          "defaultValue": false
+        },
+        "enabledForTemplateDeployment": {
+          "type": "bool",
+          "defaultValue": false
+        },
+        "enabledForDiskEncryption": {
+          "type": "bool",
+          "defaultValue": false
+        },
+        "objectId": {
+          "type": "string",
+          "defaultValue": "e3ee713b-538e-4656-a2b3-21af06d74b9e"
+        },
+        "accessPolicyKeys": {
+          "type": "string",
+          "defaultValue": "all"
+        },
+        "accessPolicySecrets": {
+          "type": "string",
+          "defaultValue": "all"
+        },
+        "keyVaultSku": {
+          "type": "string"
+        },
+        "keyVaultSkuFamily": {
+          "type": "string"
+        },
+        "userNameValue": {
+          "type": "string"
+        },
+        "windowPasswordValue": {
+          "type": "string"
+        },
+        "sqlAdministratorLoginValue": {
+          "type": "string"
+        },
+        "sqlAdministratorLoginPasswordValue": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string",
+          "defaultValue": "eastus"
+        }
+      },
+      "variables": {},
+      "resources": [
+        {
+          "type": "Microsoft.KeyVault/vaults",
+          "apiVersion": "2018-02-14",
+          "name": "[parameters('keyVaultName')]",
+          "location": "[parameters('location')]",
+          "tags": "[parameters('resourceTags')]",
+          "properties": {
+            "enabledForDeployment": "[parameters('enabledForDeployment')]",
+            "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
+            "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
+            "tenantId": "[subscription().tenantId]",
+            "accessPolicies": [
+              {
+                "tenantId": "bf5fa81f-9831-46a2-8bbf-6ca4c9a9eb4c",
+                "objectId": "[parameters('objectId')]",
+                "permissions": {
+                  "keys": ["[parameters('accessPolicyKeys')]"],
+                  "secrets": ["[parameters('accessPolicySecrets')]"]
+                }
+              }
+            ],
+            "sku": {
+              "name": "[parameters('keyVaultSku')]",
+              "family": "[parameters('keyVaultSkuFamily')]"
+            }
+          },
+          "resources": [
+            {
+              "type": "secrets",
+              "name": "userName",
+              "apiVersion": "2016-10-01",
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ],
+              "properties": {
+                "value": "[parameters('userNameValue')]"
+              }
+            },
+            {
+              "type": "secrets",
+              "name": "password",
+              "apiVersion": "2016-10-01",
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ],
+              "properties": {
+                "value": "[parameters('windowPasswordValue')]"
+              }
+            },
+            {
+              "type": "secrets",
+              "name": "sqlAdministratorLogin",
+              "apiVersion": "2016-10-01",
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ],
+              "properties": {
+                "value": "[parameters('sqlAdministratorLoginValue')]"
+              }
+            },
+            {
+              "type": "secrets",
+              "name": "sqlAdministratorLoginPassword",
+              "apiVersion": "2016-10-01",
+              "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+              ],
+              "properties": {
+                "value": "[parameters('sqlAdministratorLoginPasswordValue')]"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "resourceGroup": "identity_Rg",
+    "displayName": "Key Vault ARM template",
+    "parameters": {
+      "keyVaultName": {
+        "value": "[parameters('keyVault_Name')]"
+      },
+      "resourceTags": {
+        "value": "[parameters('resourceTags')]"
+      },
+      "keyVaultSku": {
+        "value": "[parameters('keyVault_sku')]"
+      },
+      "keyVaultSkuFamily": {
+        "value": "[parameters('keyVault_SkuFamily')]"
+      },
+      "userNameValue": {
+        "value": "[parameters('keyvault_userName')]"
+      },
+      "windowPasswordValue": {
+        "value": "[parameters('keyVault_windowPassword')]"
+      },
+      "sqlAdministratorLoginValue": {
+        "value": "[parameters('keyVault_sqlAdministratorLogin')]"
+      },
+      "sqlAdministratorLoginPasswordValue": {
+        "value": "[parameters('keyVault_sqlAdministratorLoginPassword')]"
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints/artifacts",
+  "name": "defaultName"
+}

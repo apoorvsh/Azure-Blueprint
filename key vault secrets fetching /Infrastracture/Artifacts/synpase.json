@@ -1,0 +1,332 @@
+{
+  "kind": "template",
+  "properties": {
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "resourceTags": {
+          "type": "object"
+        },
+        "synapseName": {
+          "type": "string",
+          "defaultValue": "synapseapoorv3300"
+        },
+        "sqlAdministratorLogin": {
+          "type": "securestring"
+        },
+        "sqlAdministratorLoginPassword": {
+          "type": "securestring"
+        },
+        "dedicatedSkuCapacity": {
+          "type": "int"
+        },
+        "dedicatedSkuName": {
+          "type": "string"
+        },
+        "dedicatedSkuTier": {
+          "type": "string"
+        },
+        "synapse_privateEndpointName": {
+          "type": "string",
+          "defaultValue": "synapse_private"
+        },
+        "dev_groupIds": {
+          "type": "string"
+        },
+        "dedicatedSqlPoolName": {
+          "type": "string",
+          "defaultValue": "apoorvsqlpool"
+        },
+        "location": {
+          "type": "string",
+          "defaultValue": "eastus"
+        },
+        "dedicated_Sqlpool_privateEndpointName": {
+          "type": "string",
+          "defaultValue": "dedicatedSqlpoolPrivate"
+        },
+        "sqlOnDemand_privateEndpointName": {
+          "type": "string",
+          "defaultValue": "sqlondemandPrivateEndpoint"
+        },
+        "privateLinkHubName": {
+          "type": "string",
+          "defaultValue": "synapseprivatelinkhub"
+        },
+        "privateLinkHubName_privateEndpoint": {
+          "type": "string",
+          "defaultValue": "privateLinkHubPrivateEndpoint"
+        },
+        "privateLinkHUb_groupIds": {
+          "type": "string"
+        },
+        "resourceGroup": {
+          "type": "string",
+          "defaultValue": "Network_Rg"
+        },
+        "vnetName": {
+          "type": "string",
+          "defaultValue": "vnet"
+        },
+        "subnetName": {
+          "type": "string",
+          "defaultValue": "web"
+        },
+        "privateDnsZoneResourceGroup": {
+          "type": "string",
+          "defaultValue": "private_dnsZone_rg"
+        }
+      },
+      "variables": {
+        "accountUrl": "https://store3300synapse.dfs.core.windows.net/",
+        "defaultDataLakeStorageFilesystemName": "data",
+        "synapse_dev_privateDnsZoneName": "privatelink.dev.azuresynapse.net",
+        "synaspe_sql_privateDnsZoneName": "privatelink.sql.azuresynapse.net",
+        "synaspe_privateLinkHub_privateDnsZoneName": "privatelink.azuresynapse.net"
+      },
+      "resources": [
+        {
+          "type": "Microsoft.Synapse/workspaces",
+          "apiVersion": "2019-06-01-preview",
+          "name": "[parameters('synapseName')]",
+          "tags": "[parameters('resourceTags')]",
+          "location": "[parameters('location')]",
+          "identity": {
+            "type": "SystemAssigned"
+          },
+          "properties": {
+            "sqlAdministratorLogin": "[parameters('sqlAdministratorLogin')]",
+            "sqlAdministratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
+            "defaultDataLakeStorage": {
+              "accountUrl": "[variables('accountUrl')]",
+              "filesystem": "[variables('defaultDataLakeStorageFilesystemName')]"
+            }
+          }
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints",
+          "apiVersion": "2020-05-01",
+          "name": "[parameters('synapse_privateEndpointName')]",
+          "tags": "[parameters('resourceTags')]",
+          "location": "[parameters('location')]",
+          "properties": {
+            "subnet": {
+              "id": "[resourceId(parameters('resourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+            },
+            "privateLinkServiceConnections": [
+              {
+                "name": "[parameters('synapse_privateEndpointName')]",
+                "properties": {
+                  "privateLinkServiceId": "[resourceId('Microsoft.Synapse/workspaces', parameters('synapseName'))]",
+                  "groupIds": ["[parameters('dev_groupIds')]"]
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Synapse/workspaces', parameters('synapseName'))]"
+          ]
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+          "apiVersion": "2020-05-01",
+          "name": "[format('{0}/dnsgroupname', parameters('synapse_privateEndpointName'))]",
+          "properties": {
+            "privateDnsZoneConfigs": [
+              {
+                "name": "privatelink-dev-azuresynapse-net",
+                "properties": {
+                  "privateDnsZoneId": "[resourceId(parameters('privateDnsZoneResourceGroup'),'Microsoft.Network/privateDnsZones', variables('synapse_dev_privateDnsZoneName'))]"
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/privateEndpoints', parameters('synapse_privateEndpointName'))]"
+          ]
+        },
+        {
+          "type": "Microsoft.Synapse/workspaces/sqlPools",
+          "apiVersion": "2019-06-01-preview",
+          "name": "[concat(parameters('synapseName'),'/',parameters('dedicatedSqlPoolName'))]",
+          "tags": "[parameters('resourceTags')]",
+          "location": "[parameters('location')]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Synapse/workspaces', parameters('synapseName'))]"
+          ],
+          "sku": {
+            "capacity": "[parameters('dedicatedSkuCapacity')]",
+            "name": "[parameters('dedicatedSkuName')]",
+            "tier": "[parameters('dedicatedSkuTier')]"
+          },
+          "properties": {}
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints",
+          "apiVersion": "2020-05-01",
+          "name": "[parameters('dedicated_Sqlpool_privateEndpointName')]",
+          "tags": "[parameters('resourceTags')]",
+          "location": "[parameters('location')]",
+          "properties": {
+            "subnet": {
+              "id": "[resourceId(parameters('resourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+            },
+            "privateLinkServiceConnections": [
+              {
+                "name": "[parameters('dedicated_Sqlpool_privateEndpointName')]",
+                "properties": {
+                  "privateLinkServiceId": "[resourceId('Microsoft.Synapse/workspaces', parameters('synapseName'))]",
+                  "groupIds": ["sql"]
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Synapse/workspaces', parameters('synapseName'))]"
+          ]
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+          "apiVersion": "2020-05-01",
+          "name": "[format('{0}/dnsgroupname', parameters('dedicated_Sqlpool_privateEndpointName'))]",
+          "properties": {
+            "privateDnsZoneConfigs": [
+              {
+                "name": "privatelink-sql-azuresynapse-net",
+                "properties": {
+                  "privateDnsZoneId": "[resourceId(parameters('privateDnsZoneResourceGroup'),'Microsoft.Network/privateDnsZones', variables('synaspe_sql_privateDnsZoneName'))]"
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/privateEndpoints', parameters('dedicated_Sqlpool_privateEndpointName'))]"
+          ]
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints",
+          "apiVersion": "2020-05-01",
+          "name": "[parameters('sqlOnDemand_privateEndpointName')]",
+          "tags": "[parameters('resourceTags')]",
+          "location": "[parameters('location')]",
+          "properties": {
+            "subnet": {
+              "id": "[resourceId(parameters('resourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+            },
+            "privateLinkServiceConnections": [
+              {
+                "name": "[parameters('sqlOnDemand_privateEndpointName')]",
+                "properties": {
+                  "privateLinkServiceId": "[resourceId('Microsoft.Synapse/workspaces', parameters('synapseName'))]",
+                  "groupIds": ["SqlOnDemand"]
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Synapse/workspaces', parameters('synapseName'))]"
+          ]
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+          "apiVersion": "2020-05-01",
+          "name": "[format('{0}/dnsgroupname', parameters('sqlOnDemand_privateEndpointName'))]",
+          "properties": {
+            "privateDnsZoneConfigs": [
+              {
+                "name": "privatelink-sql-azuresynapse-net",
+                "properties": {
+                  "privateDnsZoneId": "[resourceId(parameters('privateDnsZoneResourceGroup'),'Microsoft.Network/privateDnsZones', variables('synaspe_sql_privateDnsZoneName'))]"
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/privateEndpoints', parameters('sqlOnDemand_privateEndpointName'))]"
+          ]
+        },
+        {
+          "type": "Microsoft.Synapse/privateLinkHubs",
+          "apiVersion": "2021-06-01",
+          "name": "[parameters('privateLinkHubName')]",
+          "tags": "[parameters('resourceTags')]",
+          "location": "[parameters('location')]"
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints",
+          "apiVersion": "2020-05-01",
+          "name": "[parameters('privateLinkHubName_privateEndpoint')]",
+          "tags": "[parameters('resourceTags')]",
+          "location": "[parameters('location')]",
+          "properties": {
+            "subnet": {
+              "id": "[resourceId(parameters('resourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+            },
+            "privateLinkServiceConnections": [
+              {
+                "name": "[parameters('privateLinkHubName_privateEndpoint')]",
+                "properties": {
+                  "privateLinkServiceId": "[resourceId('Microsoft.Synapse/privateLinkHubs', parameters('privateLinkHubName'))]",
+                  "groupIds": ["[parameters('privateLinkHUb_groupIds')]"]
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Synapse/privateLinkHubs', parameters('privateLinkHubName'))]",
+            "[resourceId('Microsoft.Synapse/workspaces', parameters('synapseName'))]"
+          ]
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+          "apiVersion": "2020-05-01",
+          "name": "[format('{0}/mydnsgroupname', parameters('privateLinkHubName_privateEndpoint'))]",
+          "properties": {
+            "privateDnsZoneConfigs": [
+              {
+                "name": "privatelink-azuresynapse-net",
+                "properties": {
+                  "privateDnsZoneId": "[resourceId(parameters('privateDnsZoneResourceGroup'),'Microsoft.Network/privateDnsZones', variables('synaspe_privateLinkHub_privateDnsZoneName'))]"
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/privateEndpoints', parameters('privateLinkHubName_privateEndpoint'))]"
+          ]
+        }
+      ]
+    },
+    "resourceGroup": "data_platform_Rg",
+    "displayName": "Azure DataFactory ARM Template",
+    "parameters": {
+      "resourceTags": {
+        "value": "[parameters('resourceTags')]"
+      },
+      "dedicatedSkuCapacity": {
+        "value": "[parameters('synapse_dedicatedSkuCapacity')]"
+      },
+      "dedicatedSkuName": {
+        "value": "[parameters('synapse_dedicatedSkuName')]"
+      },
+      "dedicatedSkuTier": {
+        "value": "[parameters('synapse_dedicatedSkuTier')]"
+      },
+      "dev_groupIds": {
+        "value": "[parameters('synapse_dev_groupIds')]"
+      },
+      "privateLinkHUb_groupIds": {
+        "value": "[parameters('synapse_privateLinkHUb_groupIds')]"
+      },
+      "sqlAdministratorLogin": {
+        "value": "[parameters('synapse_sqlAdministratorLogin')]"
+      },
+      "sqlAdministratorLoginPassword": {
+        "value": "[parameters('synapse_sqlAdministratorLoginPassword')]"
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints/artifacts",
+  "name": "defaultName"
+}

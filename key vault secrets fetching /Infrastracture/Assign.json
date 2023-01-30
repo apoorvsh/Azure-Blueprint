@@ -1,0 +1,128 @@
+{
+  "identity": {
+    "type": "UserAssigned",
+    "tenantId": "bf5fa81f-9831-46a2-8bbf-6ca4c9a9eb4c",
+    "userAssignedIdentities": {
+      "/subscriptions/aa9021c8-9d60-4e88-8ba9-d8188788d9d5/resourceGroups/private_dnsZone_rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/apoorv": {}
+    }
+  },
+  "location": "eastus",
+  "properties": {
+    "blueprintId": "/subscriptions/aa9021c8-9d60-4e88-8ba9-d8188788d9d5/providers/Microsoft.Blueprint/blueprints/core",
+    "resourceGroups": {},
+    "locks": {
+      "mode": "none"
+    },
+    "parameters": {
+      "resourceTags": {
+        "value": {
+          "environment": "test"
+        }
+      },
+      "adf_groupIds": {
+        "value": "datafactory"
+      },
+      "ADLS_storageSkuTier": {
+        "value": "Standard"
+      },
+      "ADLS_storageAccountSkuName": {
+        "value": "Standard_LRS"
+      },
+      "ADLS_storageKind": {
+        "value": "StorageV2"
+      },
+      "ADLS_accessTier": {
+        "value": "Hot"
+      },
+      "ADLS_blob_groupIds": {
+        "value": "blob"
+      },
+      "ADLS_dfs_groupIds": {
+        "value": "dfs"
+      },
+      "keyVaultSku_assign": {
+        "value": "standard"
+      },
+      "keyVaultSkuFamily_assign": {
+        "value": "A"
+      },
+      "keyVaultSecretsValue_assign": {
+        "value": "Password@123"
+      },
+      "keyVault_groupIds": {
+        "value": "vault"
+      },
+      "synapse_dedicatedSkuCapacity": {
+        "value": 100
+      },
+      "synapse_dedicatedSkuName": {
+        "value": "DW100c"
+      },
+      "synapse_dedicatedSkuTier": {
+        "value": "DW100c"
+      },
+      "synapse_dev_groupIds": {
+        "value": "dev"
+      },
+      "synapse_privateLinkHUb_groupIds": {
+        "value": "web"
+      },
+      "vm_windowVmSize": {
+        "value": "Standard_B2s"
+      },
+      "vm_windowPublisher": {
+        "value": "MicrosoftWindowsServer"
+      },
+      "vm_windowOffer": {
+        "value": "WindowsServer"
+      },
+      "vm_windowSku": {
+        "value": "2012-R2-Datacenter"
+      },
+      "vm_windowVersion": {
+        "value": "latest"
+      },
+      "vm_windowOsDisk": {
+        "value": "WindowVMDisk"
+      },
+      "vm_windowCaching": {
+        "value": "ReadWrite"
+      },
+      "vm_windowCreateOption": {
+        "value": "FromImage"
+      },
+      "vm_windowUserName": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/aa9021c8-9d60-4e88-8ba9-d8188788d9d5/resourceGroups/identity_Rg/providers/Microsoft.KeyVault/vaults/apoorv33445566"
+          },
+          "secretName": "userName"
+        }
+      },
+      "vm_windowPassword": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/aa9021c8-9d60-4e88-8ba9-d8188788d9d5/resourceGroups/identity_Rg/providers/Microsoft.KeyVault/vaults/apoorv33445566"
+          },
+          "secretName": "password"
+        }
+      },
+      "synapse_sqlAdministratorLogin": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/aa9021c8-9d60-4e88-8ba9-d8188788d9d5/resourceGroups/identity_Rg/providers/Microsoft.KeyVault/vaults/apoorv33445566"
+          },
+          "secretName": "sqlAdministratorLogin"
+        }
+      },
+      "synapse_sqlAdministratorLoginPassword": {
+        "reference": {
+          "keyVault": {
+            "id": "/subscriptions/aa9021c8-9d60-4e88-8ba9-d8188788d9d5/resourceGroups/identity_Rg/providers/Microsoft.KeyVault/vaults/apoorv33445566"
+          },
+          "secretName": "sqlAdministratorLoginPassword"
+        }
+      }
+    }
+  }
+}

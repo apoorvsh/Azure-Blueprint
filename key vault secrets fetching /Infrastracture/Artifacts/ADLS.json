@@ -1,0 +1,224 @@
+{
+  "kind": "template",
+  "properties": {
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "storageAccountName": {
+          "type": "string"
+        },
+        "resourceTags": {
+          "type": "object"
+        },
+        "storageSkuTier": {
+          "type": "string"
+        },
+        "storageAccountSkuName": {
+          "type": "string"
+        },
+        "storageKind": {
+          "type": "string"
+        },
+        "supportsHttpsTrafficOnly": {
+          "type": "bool",
+          "defaultValue": false
+        },
+        "fileEnabled": {
+          "type": "bool",
+          "defaultValue": true
+        },
+        "blobEnabled": {
+          "type": "bool",
+          "defaultValue": true
+        },
+        "accessTier": {
+          "type": "string"
+        },
+        "isHnsEnabled": {
+          "type": "bool",
+          "defaultValue": true
+        },
+        "blob_privateEndpointName": {
+          "type": "string",
+          "defaultValue": "blob_private"
+        },
+        "blob_groupIds": {
+          "type": "string"
+        },
+        "dfs_groupIds": {
+          "type": "string"
+        },
+        "dfs_privateEndpointName": {
+          "type": "string",
+          "defaultValue": "dfs_private"
+        },
+        "resourceGroup": {
+          "type": "string",
+          "defaultValue": "Network_Rg"
+        },
+        "vnetName": {
+          "type": "string",
+          "defaultValue": "vnet"
+        },
+        "subnetName": {
+          "type": "string",
+          "defaultValue": "data"
+        },
+        "privateDnsZoneResourceGroup": {
+          "type": "string",
+          "defaultValue": "private_dnsZone_rg"
+        },
+        "resourceLocation": {
+          "type": "string",
+          "defaultValue": "eastus"
+        }
+      },
+      "variables": {
+        "blob_privateDnsZoneName": "privatelink.blob.core.windows.net",
+        "dfs_privateDnsZoneName": "privatelink.dfs.core.windows.net"
+      },
+      "resources": [
+        {
+          "type": "Microsoft.Storage/storageAccounts",
+          "apiVersion": "2019-04-01",
+          "name": "[parameters('storageAccountName')]",
+          "location": "[parameters('resourceLocation')]",
+
+          "sku": {
+            "name": "[parameters('storageAccountSkuName')]",
+            "tier": "[parameters('storageSkuTier')]"
+          },
+          "kind": "[parameters('storageKind')]",
+          "properties": {
+            "isHnsEnabled": "[parameters('isHnsEnabled')]",
+            "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
+            "services": {
+              "file": {
+                "enabled": "[parameters('fileEnabled')]"
+              },
+              "blob": {
+                "enabled": "[parameters('blobEnabled')]"
+              }
+            },
+            "accessTier": "[parameters('accessTier')]"
+          }
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints",
+          "apiVersion": "2020-05-01",
+          "name": "[parameters('blob_privateEndpointName')]",
+          "location": "[parameters('resourceLocation')]",
+
+          "properties": {
+            "subnet": {
+              "id": "[resourceId(parameters('resourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+            },
+            "privateLinkServiceConnections": [
+              {
+                "name": "[parameters('blob_privateEndpointName')]",
+                "properties": {
+                  "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+                  "groupIds": ["[parameters('blob_groupIds')]"]
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+          ]
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+          "apiVersion": "2020-05-01",
+          "name": "[format('{0}/dnsgroupname', parameters('blob_privateEndpointName'))]",
+          "properties": {
+            "privateDnsZoneConfigs": [
+              {
+                "name": "privatelink-blob-core-windows-net",
+                "properties": {
+                  "privateDnsZoneId": "[resourceId(parameters('privateDnsZoneResourceGroup'),'Microsoft.Network/privateDnsZones', variables('blob_privateDnsZoneName'))]"
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/privateEndpoints', parameters('blob_privateEndpointName'))]"
+          ]
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints",
+          "apiVersion": "2020-05-01",
+          "name": "[parameters('dfs_privateEndpointName')]",
+          "location": "[parameters('resourceLocation')]",
+
+          "properties": {
+            "subnet": {
+              "id": "[resourceId(parameters('resourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+            },
+            "privateLinkServiceConnections": [
+              {
+                "name": "[parameters('dfs_privateEndpointName')]",
+                "properties": {
+                  "privateLinkServiceId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+                  "groupIds": ["[parameters('dfs_groupIds')]"]
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+          ]
+        },
+        {
+          "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+          "apiVersion": "2020-05-01",
+          "name": "[format('{0}/dnsgroupname', parameters('dfs_privateEndpointName'))]",
+          "properties": {
+            "privateDnsZoneConfigs": [
+              {
+                "name": "privatelink-dfs-core-windows-net",
+                "properties": {
+                  "privateDnsZoneId": "[resourceId(parameters('privateDnsZoneResourceGroup'),'Microsoft.Network/privateDnsZones', variables('dfs_privateDnsZoneName'))]"
+                }
+              }
+            ]
+          },
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/privateEndpoints', parameters('dfs_privateEndpointName'))]"
+          ]
+        }
+      ]
+    },
+    "resourceGroup": "data_platform_Rg",
+    "displayName": "Adls Gen2 ARM Template",
+    "parameters": {
+      "storageAccountName": {
+        "value": "apoorvstorage"
+      },
+      "resourceTags": {
+        "value": "[parameters('resourceTags')]"
+      },
+      "storageSkuTier": {
+        "value": "[parameters('ADLS_storageSkuTier')]"
+      },
+      "storageAccountSkuName": {
+        "value": "[parameters('ADLS_storageAccountSkuName')]"
+      },
+      "storageKind": {
+        "value": "[parameters('ADLS_storageKind')]"
+      },
+      "accessTier": {
+        "value": "[parameters('ADLS_accessTier')]"
+      },
+      "blob_groupIds": {
+        "value": "[parameters('ADLS_blob_groupIds')]"
+      },
+      "dfs_groupIds": {
+        "value": "[parameters('ADLS_dfs_groupIds')]"
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints/artifacts",
+  "name": "defaultName"
+}

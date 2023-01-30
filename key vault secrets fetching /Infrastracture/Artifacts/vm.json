@@ -1,0 +1,193 @@
+{
+  "kind": "template",
+  "properties": {
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "resourceTags": {
+          "type": "object"
+        },
+        "location": {
+          "type": "string",
+          "defaultValue": "eastus"
+        },
+        "windowNicName": {
+          "type": "string"
+        },
+        "windowVmName": {
+          "type": "string",
+          "defaultValue": "WindowVM"
+        },
+        "windowVmSize": {
+          "type": "string"
+        },
+        "windowComputerName": {
+          "type": "string"
+        },
+        "windowUserName": {
+          "type": "securestring"
+        },
+        "windowPassword": {
+          "type": "securestring"
+        },
+        "windowPublisher": {
+          "type": "string"
+        },
+        "windowOffer": {
+          "type": "string"
+        },
+        "windowSku": {
+          "type": "string"
+        },
+        "windowVersion": {
+          "type": "string"
+        },
+        "windowOsDisk": {
+          "type": "string"
+        },
+        "windowCaching": {
+          "type": "string"
+        },
+        "windowCreateOption": {
+          "type": "string"
+        },
+        "resourceGroup": {
+          "type": "string",
+          "defaultValue": "Network_Rg"
+        },
+        "vnetName": {
+          "type": "string",
+          "defaultValue": "vnet"
+        },
+        "subnetName": {
+          "type": "string",
+          "defaultValue": "compute"
+        }
+      },
+      "variables": {
+        "windowPublicIpName": "windowPublicIp"
+      },
+      "resources": [
+        {
+          "name": "[variables('windowPublicIpName')]",
+          "type": "Microsoft.Network/publicIPAddresses",
+          "apiVersion": "2020-05-01",
+          "location": "[parameters('location')]",
+          "tags": "[parameters('resourceTags')]",
+          "properties": {
+            "publicIPAllocationMethod": "Dynamic"
+          }
+        },
+        {
+          "name": "[parameters('windowNicName')]",
+          "type": "Microsoft.Network/networkInterfaces",
+          "apiVersion": "2018-08-01",
+          "location": "[parameters('location')]",
+          "tags": "[parameters('resourceTags')]",
+          "properties": {
+            "ipConfigurations": [
+              {
+                "name": "ipConfig1",
+                "properties": {
+                  "privateIPAllocationMethod": "Dynamic",
+                  "publicIPAddress": {
+                    "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('windowPublicIpName'))]"
+                  },
+                  "subnet": {
+                    "id": "[resourceId(parameters('resourceGroup'),'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "[parameters('windowVmName')]",
+          "type": "Microsoft.Compute/virtualMachines",
+          "apiVersion": "2017-03-30",
+          "location": "[parameters('location')]",
+          "tags": "[parameters('resourceTags')]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Network/networkInterfaces', parameters('windowNicName'))]"
+          ],
+          "properties": {
+            "hardwareProfile": {
+              "vmSize": "[parameters('windowVmSize')]"
+            },
+            "osProfile": {
+              "computerName": "[parameters('windowComputerName')]",
+              "adminUsername": "[parameters('windowUserName')]",
+              "adminPassword": "[parameters('windowPassword')]"
+            },
+            "storageProfile": {
+              "imageReference": {
+                "publisher": "[parameters('windowPublisher')]",
+                "offer": "[parameters('windowOffer')]",
+                "sku": "[parameters('windowSku')]",
+                "version": "[parameters('windowVersion')]"
+              },
+              "osDisk": {
+                "name": "[parameters('windowOsDisk')]",
+                "caching": "[parameters('windowCaching')]",
+                "createOption": "[parameters('windowCreateOption')]"
+              }
+            },
+            "networkProfile": {
+              "networkInterfaces": [
+                {
+                  "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('windowNicName'))]"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "resourceGroup": "compute_Rg",
+    "displayName": "VM ARM Template",
+    "parameters": {
+      "resourceTags": {
+        "value": "[parameters('resourceTags')]"
+      },
+      "windowNicName": {
+        "value": "windowNicCard"
+      },
+      "windowComputerName": {
+        "value": "windowVM"
+      },
+      "windowVmSize": {
+        "value": "[parameters('vm_windowVmSize')]"
+      },
+      "windowPublisher": {
+        "value": "[parameters('vm_windowPublisher')]"
+      },
+      "windowOffer": {
+        "value": "[parameters('vm_windowOffer')]"
+      },
+      "windowSku": {
+        "value": "[parameters('vm_windowSku')]"
+      },
+      "windowVersion": {
+        "value": "[parameters('vm_windowVersion')]"
+      },
+      "windowOsDisk": {
+        "value": "[parameters('vm_windowOsDisk')]"
+      },
+      "windowCaching": {
+        "value": "[parameters('vm_windowCaching')]"
+      },
+      "windowCreateOption": {
+        "value": "[parameters('vm_windowCreateOption')]"
+      },
+      "windowUserName": {
+        "value": "[parameters('vm_windowUserName')]"
+      },
+      "windowPassword": {
+        "value": "[parameters('vm_windowPassword')]"
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints/artifacts",
+  "name": "defaultName"
+}
