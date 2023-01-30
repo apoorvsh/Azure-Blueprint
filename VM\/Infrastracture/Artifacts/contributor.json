@@ -1,0 +1,11 @@
+{
+  "kind": "roleAssignment",
+  "properties": {
+    "resourceGroup": "onpremrg",
+    "roleDefinitionId": "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+    "principalIds": "[parameters('contributor_role')]",
+    "displayName": "Contributor Role"
+  },
+  "type": "Microsoft.Blueprint/blueprints/artifacts",
+  "name": "defaultRbacAssignment"
+}

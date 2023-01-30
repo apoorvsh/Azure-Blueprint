@@ -1,0 +1,56 @@
+{
+  "identity": {
+    "type": "systemAssigned"
+  },
+  "location": "eastus",
+  "properties": {
+    "blueprintId": "/subscriptions/8a21611a-c5d3-4127-a0e2-be72ad32026d/providers/Microsoft.Blueprint/blueprints/Infrastracture",
+    "resourceGroups": {},
+    "locks": {
+      "mode": "none"
+    },
+    "parameters": {
+      "readerRole": {
+        "value": ["6a5547cc-43b8-4ab3-980b-077a43dbc5bc"]
+      },
+      "resourceGroupName": {
+        "value": "spokerg"
+      },
+      "resourceGroupLocation": {
+        "value": "eastus"
+      },
+      "Adls_vnetName": {
+        "value": "vnetA"
+      },
+      "Adls_subnetName": {
+        "value": "subnetA"
+      },
+      "Adls_location": {
+        "value": "eastus"
+      },
+      "Adls_storageAccountName": {
+        "value": "store012345678"
+      },
+      "Adls_storageSkuTier": {
+        "value": "Standard"
+      },
+      "Adls_storageAccountSkuName": {
+        "value": "Standard_LRS"
+      },
+      "Adls_privateEndpointName": {
+        "value": "storagePrivate"
+      },
+      "Adls_accessTier": {
+        "value": "Hot"
+      },
+      "Adls_resourceTags": {
+        "value": {
+          "environment": "test"
+        }
+      },
+      "Adls_storageKind": {
+        "value": "StorageV2"
+      }
+    }
+  }
+}

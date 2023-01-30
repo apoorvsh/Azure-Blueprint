@@ -1,0 +1,11 @@
+{
+  "kind": "roleAssignment",
+  "properties": {
+    "resourceGroup": "spokerg",
+    "roleDefinitionId": "/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7",
+    "principalIds": "[parameters('readerRole')]",
+    "displayName": "ReaderRole"
+  },
+  "type": "Microsoft.Blueprint/blueprints/artifacts",
+  "name": "defaultRbacAssignment"
+}

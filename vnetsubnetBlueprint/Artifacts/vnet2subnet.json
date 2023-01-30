@@ -1,0 +1,81 @@
+{
+  "kind": "template",
+  "properties": {
+    "displayName": "vnet2Subnet",
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "vnetName": {
+          "type": "string"
+        },
+        "vnetAddress": {
+          "type": "string"
+        },
+        "subnetNameA": {
+          "type": "string"
+        },
+        "subnetAddressA": {
+          "type": "string",
+          "defaultValue": "10.0.1.0/24"
+        },
+        "subnetNameB": {
+          "type": "string"
+        },
+        "subnetAddressB": {
+          "type": "string",
+          "defaultValue": "10.0.2.0/24"
+        },
+        "location": {
+          "type": "string"
+        }
+      },
+      "variables": {},
+      "resources": [
+        {
+          "name": "[parameters('vnetName')]",
+          "type": "Microsoft.Network/virtualNetworks",
+          "apiVersion": "2018-08-01",
+          "location": "[resourceGroup().location]",
+          "properties": {
+            "addressSpace": {
+              "addressPrefixes": ["[parameters('vnetAddress')]"]
+            },
+            "subnets": [
+              {
+                "name": "[parameters('subnetNameA')]",
+                "properties": {
+                  "addressPrefix": "[parameters('subnetAddressA')]"
+                }
+              },
+              {
+                "name": "[parameters('subnetNameB')]",
+                "properties": {
+                  "addressPrefix": "[parameters('subnetAddressB')]"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "resourceGroup": "spokerg",
+    "parameters": {
+      "vnetName": {
+        "value": "[parameters('vnet2Subnet_vnetName')]"
+      },
+      "vnetAddress": {
+        "value": "10.0.0.0/16"
+      },
+      "subnetNameA": {
+        "value": "[parameters('vnet2Subnet_subnetNameA')]"
+      },
+      "location": {
+        "value": "[parameters('vnet2Subnet_location')]"
+      },
+      "subnetNameB": {
+        "value": "[parameters('vnet2Subnet_subnetNameB')]"
+      }
+    }
+  }
+}

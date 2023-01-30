@@ -1,0 +1,65 @@
+{
+  "kind": "template",
+  "properties": {
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "synapseName": {
+          "type": "string"
+        },
+        "sqlAdministratorLogin": {
+          "type": "securestring",
+          "defaultValue": "testuser"
+        },
+        "sqlAdministratorLoginPassword": {
+          "type": "securestring",
+          "defaultValue": "Password@123"
+        },
+        "synapseTag": {
+          "type": "object"
+        },
+        "location": {
+          "type": "string",
+          "defaultValue": "eastus"
+        }
+      },
+      "variables": {
+        "accountUrl": "https://store330099.dfs.core.windows.net/",
+        "defaultDataLakeStorageFilesystemName": "data"
+      },
+      "resources": [
+        {
+          "type": "Microsoft.Synapse/workspaces",
+          "apiVersion": "2019-06-01-preview",
+          "name": "[parameters('synapseName')]",
+          "tags": "[parameters('synapseTag')]",
+          "location": "[parameters('location')]",
+          "identity": {
+            "type": "SystemAssigned"
+          },
+          "properties": {
+            "sqlAdministratorLogin": "[parameters('sqlAdministratorLogin')]",
+            "sqlAdministratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
+            "defaultDataLakeStorage": {
+              "accountUrl": "[variables('accountUrl')]",
+              "filesystem": "[variables('defaultDataLakeStorageFilesystemName')]"
+            }
+          }
+        }
+      ]
+    },
+    "resourceGroup": "spokerg",
+    "displayName": "Synapse ARM Template",
+    "parameters": {
+      "synapseName": {
+        "value": "[parameters('synapseName_assign')]"
+      },
+      "synapseTag": {
+        "value": "[parameters('synapseTag_assign')]"
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints/artifacts",
+  "name": "defaultName"
+}

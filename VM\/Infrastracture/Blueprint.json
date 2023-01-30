@@ -1,0 +1,95 @@
+{
+  "properties": {
+    "description": "This is a default template, please modify it.",
+    "targetScope": "subscription",
+    "parameters": {
+      "reader_role": {
+        "type": "array"
+      },
+      "contributor_role": {
+        "type": "array"
+      },
+      "owner_role": {
+        "type": "array"
+      },
+      "reader_role_subscription": {
+        "type": "array"
+      },
+      "vm_resourceTags": {
+        "type": "object"
+      },
+      "vm_windowNsgRules": {
+        "type": "object"
+      },
+      "vm_windowVmSize": {
+        "type": "string"
+      },
+      "vm_windowPublisher": {
+        "type": "string"
+      },
+      "vm_windowOffer": {
+        "type": "string"
+      },
+      "vm_windowSku": {
+        "type": "string"
+      },
+      "vm_windowVersion": {
+        "type": "string"
+      },
+      "vm_windowOsDisk": {
+        "type": "string"
+      },
+      "vm_windowCaching": {
+        "type": "string"
+      },
+      "vm_windowCreateOption": {
+        "type": "string"
+      },
+      "keyVaultName_assign": {
+        "type": "string"
+      },
+      "keyVault_resouceTag_assign": {
+        "type": "object"
+      },
+      "keyVaultSku_assign": {
+        "type": "string"
+      },
+      "keyVaultSkuFamily_assign": {
+        "type": "string"
+      },
+      "keyVaultSecretsValue_assign": {
+        "type": "string"
+      },
+      "synapseName_assign": {
+        "type": "string"
+      },
+      "synapseTag_assign": {
+        "type": "object"
+      }
+    },
+    "resourceGroups": {
+      "hubrg": {
+        "name": "hubrg",
+        "location": "eastus",
+        "metadata": {
+          "displayName": "This is hubrg resourceGroup"
+        }
+      },
+      "spokerg": {
+        "name": "spokerg",
+        "location": "eastus",
+        "metadata": {
+          "displayName": "This is spokerg resourceGroup"
+        }
+      },
+      "onpremrg": {
+        "name": "onpremrg",
+        "location": "eastus",
+        "metadata": {
+          "displayName": "This is onpremrg resourceGroup"
+        }
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints"
+}

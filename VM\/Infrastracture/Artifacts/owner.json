@@ -1,0 +1,11 @@
+{
+  "kind": "roleAssignment",
+  "properties": {
+    "resourceGroup": "spokerg",
+    "roleDefinitionId": "/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+    "principalIds": "[parameters('owner_role')]",
+    "displayName": "Owner Role"
+  },
+  "type": "Microsoft.Blueprint/blueprints/artifacts",
+  "name": "defaultRbacAssignment"
+}

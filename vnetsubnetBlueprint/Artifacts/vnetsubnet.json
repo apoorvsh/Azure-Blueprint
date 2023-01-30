@@ -1,0 +1,66 @@
+{
+  "kind": "template",
+  "properties": {
+    "displayName": "vnetSubnet",
+    "template": {
+      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "vnetName": {
+          "type": "string"
+        },
+        "vnetAddress": {
+          "type": "string"
+        },
+        "subnetName": {
+          "type": "string"
+        },
+        "subnetAddress": {
+          "type": "string",
+          "defaultValue": "10.0.1.0/24"
+        },
+        "location": {
+          "type": "string"
+        }
+      },
+      "variables": {},
+      "resources": [
+        {
+          "name": "[parameters('vnetName')]",
+          "type": "Microsoft.Network/virtualNetworks",
+          "apiVersion": "2018-08-01",
+          "location": "[parameters('location')]",
+          "properties": {
+            "addressSpace": {
+              "addressPrefixes": ["[parameters('vnetAddress')]"]
+            }
+          }
+        },
+        {
+          "type": "Microsoft.Network/virtualNetworks/subnets",
+          "apiVersion": "2018-10-01",
+          "name": "[concat(parameters('VnetName'),'/',parameters('subnetName'))]",
+          "dependsOn": ["[parameters('VnetName')]"],
+          "properties": {
+            "addressPrefix": "[parameters('subnetAddress')]"
+          }
+        }
+      ]
+    },
+    "resourceGroup": "hubrg",
+    "parameters": {
+      "vnetName": {
+        "value": "[parameters('vnetSubnet_vnetName')]"
+      },
+      "vnetAddress": {
+        "value": "10.0.0.0/16"
+      },
+      "subnetName": {
+        "value": "[parameters('vnetSubnet_subnetName')]"
+      },
+      "location": {
+        "value": "[parameters('vnetSubnet_location')]"
+      }
+    }
+  }
+}

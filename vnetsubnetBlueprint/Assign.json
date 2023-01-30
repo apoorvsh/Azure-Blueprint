@@ -1,0 +1,54 @@
+{
+  "identity": {
+    "type": "systemAssigned"
+  },
+  "location": "eastus",
+  "properties": {
+    "blueprintId": "/subscriptions/8a21611a-c5d3-4127-a0e2-be72ad32026d/providers/Microsoft.Blueprint/blueprints/Infrastracture",
+    "resourceGroups": {},
+    "locks": {
+      "mode": "none"
+    },
+    "parameters": {
+      "readerRole": {
+        "value": ["6a5547cc-43b8-4ab3-980b-077a43dbc5bc"]
+      },
+      "contributorRole": {
+        "value": ["6a5547cc-43b8-4ab3-980b-077a43dbc5bc"]
+      },
+      "resourceGroupNameA": {
+        "value": "hubrg"
+      },
+      "resourceGroupLocationA": {
+        "value": "eastus"
+      },
+      "resourceGroupNameB": {
+        "value": "spokerg"
+      },
+      "resourceGroupLocationB": {
+        "value": "eastus"
+      },
+      "vnetSubnet_vnetName": {
+        "value": "vnetA"
+      },
+      "vnetSubnet_subnetName": {
+        "value": "subnetA"
+      },
+      "vnetSubnet_location": {
+        "value": "eastus"
+      },
+      "vnet2Subnet_vnetName": {
+        "value": "vnetB"
+      },
+      "vnet2Subnet_subnetNameA": {
+        "value": "subnetA"
+      },
+      "vnet2Subnet_subnetNameB": {
+        "value": "subnetB"
+      },
+      "vnet2Subnet_location": {
+        "value": "eastus"
+      }
+    }
+  }
+}

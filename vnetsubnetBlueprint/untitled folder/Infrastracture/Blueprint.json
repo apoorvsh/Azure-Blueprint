@@ -1,0 +1,51 @@
+{
+  "properties": {
+    "description": "This is a default template, please modify it.",
+    "targetScope": "subscription",
+    "parameters": {
+      "readerRole": {
+        "type": "array"
+      },
+      "resourceGroupNameA": {
+        "type": "string"
+      },
+      "resourceGroupLocationA": {
+        "type": "string"
+      },
+      "resourceGroupNameB": {
+        "type": "string"
+      },
+      "resourceGroupLocationB": {
+        "type": "string"
+      },
+      "vnetSubnet_vnetName": {
+        "type": "string",
+        "defaultValue": "vnetE"
+      },
+      "vnetSubnet_subnetName": {
+        "type": "string",
+        "defaultValue": "subnetC"
+      },
+      "vnetSubnet_location": {
+        "type": "string"
+      }
+    },
+    "resourceGroups": {
+      "hubrg": {
+        "name": "[parameters('resourceGroupNameA')]",
+        "location": "[parameters('resourceGroupLocationA')]",
+        "metadata": {
+          "displayName": "This is hubrg resourceGroup"
+        }
+      },
+      "spokerg": {
+        "name": "[parameters('resourceGroupNameB')]",
+        "location": "[parameters('resourceGroupLocationB')]",
+        "metadata": {
+          "displayName": "This is spokerg resourceGroup"
+        }
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints"
+}

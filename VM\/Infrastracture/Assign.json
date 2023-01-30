@@ -1,0 +1,100 @@
+{
+  "identity": {
+    "type": "UserAssigned",
+    "tenantId": "bf5fa81f-9831-46a2-8bbf-6ca4c9a9eb4c",
+    "userAssignedIdentities": {
+      "/subscriptions/aa9021c8-9d60-4e88-8ba9-d8188788d9d5/resourceGroups/onpremrg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/apoorv": {}
+    }
+  },
+  "location": "eastus",
+  "properties": {
+    "blueprintId": "/subscriptions/aa9021c8-9d60-4e88-8ba9-d8188788d9d5/providers/Microsoft.Blueprint/blueprints/amit",
+    "resourceGroups": {},
+    "locks": {
+      "mode": "none"
+    },
+    "parameters": {
+      "reader_role": {
+        "value": ["8830a8bd-5fee-4dde-9ff4-59aa4b2b8e93"]
+      },
+      "contributor_role": {
+        "value": ["8830a8bd-5fee-4dde-9ff4-59aa4b2b8e93"]
+      },
+      "owner_role": {
+        "value": ["8830a8bd-5fee-4dde-9ff4-59aa4b2b8e93"]
+      },
+      "reader_role_subscription": {
+        "value": ["8830a8bd-5fee-4dde-9ff4-59aa4b2b8e93"]
+      },
+      "vm_resourceTags": {
+        "value": {
+          "environment": "test"
+        }
+      },
+      "vm_windowNsgRules": {
+        "value": {
+          "Nsg": {
+            "name": "RDP",
+            "protocol": "TCP",
+            "sourcePortRange": "*",
+            "destinationPortRange": "3389",
+            "sourceAddressPrefix": "*",
+            "destinationAddressPrefix": "*",
+            "access": "Allow",
+            "priority": "500",
+            "direction": "Inbound"
+          }
+        }
+      },
+      "vm_windowVmSize": {
+        "value": "Standard_B2s"
+      },
+      "vm_windowPublisher": {
+        "value": "MicrosoftWindowsServer"
+      },
+      "vm_windowOffer": {
+        "value": "WindowsServer"
+      },
+      "vm_windowSku": {
+        "value": "2012-R2-Datacenter"
+      },
+      "vm_windowVersion": {
+        "value": "latest"
+      },
+      "vm_windowOsDisk": {
+        "value": "WindowVMDisk"
+      },
+      "vm_windowCaching": {
+        "value": "ReadWrite"
+      },
+      "vm_windowCreateOption": {
+        "value": "FromImage"
+      },
+      "keyVaultName_assign": {
+        "value": "apoorv56789012345"
+      },
+      "keyVault_resouceTag_assign": {
+        "value": {
+          "environment": "test"
+        }
+      },
+      "keyVaultSku_assign": {
+        "value": "standard"
+      },
+      "keyVaultSkuFamily_assign": {
+        "value": "A"
+      },
+      "keyVaultSecretsValue_assign": {
+        "value": "Password@123"
+      },
+      "synapseName_assign": {
+        "value": "synapse3300apoorv"
+      },
+      "synapseTag_assign": {
+        "value": {
+          "environment": "test"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "properties": {
+    "description": "This is a default template, please modify it.",
+    "targetScope": "subscription",
+    "parameters": {
+      "readerRole": {
+        "type": "array"
+      },
+      "resourceGroupName": {
+        "type": "string"
+      },
+      "resourceGroupLocation": {
+        "type": "string"
+      },
+      "Adls_vnetName": {
+        "type": "string"
+      },
+      "Adls_subnetName": {
+        "type": "string",
+        "defaultValue": "subnetC"
+      },
+      "Adls_location": {
+        "type": "string"
+      },
+      "Adls_storageKind": {
+        "type": "string"
+      },
+      "Adls_storageAccountName": {
+        "type": "string"
+      },
+      "Adls_storageSkuTier": {
+        "type": "string"
+      },
+      "Adls_storageAccountSkuName": {
+        "type": "string"
+      },
+      "Adls_privateEndpointName": {
+        "type": "string"
+      },
+      "Adls_accessTier": {
+        "type": "string"
+      },
+      "Adls_resourceTags": {
+        "type": "object"
+      }
+    },
+    "resourceGroups": {
+      "spokerg": {
+        "name": "[parameters('resourceGroupName')]",
+        "location": "[parameters('resourceGroupLocation')]",
+        "metadata": {
+          "displayName": "This is spokerg resourceGroup"
+        }
+      }
+    }
+  },
+  "type": "Microsoft.Blueprint/blueprints"
+}
